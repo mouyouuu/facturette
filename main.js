@@ -189,6 +189,7 @@ async function createWindow() {
     minWidth: 1060,
     minHeight: 760,
     show: false,
+    icon: path.join(__dirname, "build", "icon.png"),
     backgroundColor: "#f4f6fb",
     title: APP_NAME,
     webPreferences: {

@@ -8,6 +8,7 @@
   "private": true,
   "scripts": {
     "start": "electron .",
+    "icons": "python scripts/generate-icons.py",
     "pack": "electron-builder --win nsis --x64",
     "dist": "electron-builder --win portable --x64",
     "dist:win": "electron-builder --win portable --x64",
@@ -18,9 +19,10 @@
     "electron": "^30.5.1",
     "electron-builder": "^24.13.3"
   },
-  "build": {
+    "build": {
     "appId": "fr.facturette.desktop",
     "productName": "Facturette",
+    "icon": "build/icon.ico",
     "directories": {
       "output": "dist"
     },
@@ -30,10 +32,12 @@
       "index.html",
       "styles.css",
       "script.js",
+      "build/**/*",
       "package.json",
       "node_modules/**/*"
     ],
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         {
           "target": "portable",
@@ -48,6 +52,7 @@
       "artifactName": "Facturette.exe"
     },
     "mac": {
+      "icon": "build/icon.icns",
       "category": "public.app-category.business",
       "target": [
         {

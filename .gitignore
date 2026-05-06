@@ -1,3 +1,7 @@
 node_modules/
 dist/
+dist-mac/
+diagnostics/
+Facturette-Mac-*.dmg
+Facturette-Mac-*.zip
 *.log
