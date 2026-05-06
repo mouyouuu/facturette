@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facturette</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Facturation locale</p>
+          <h1>Facturette</h1>
+        </div>
+        <div class="header-meta">
+          <span id="storagePath">Chargement...</span>
+          <strong id="nextNumber">Facture n°--</strong>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <section class="panel form-panel" aria-labelledby="formTitle">
+          <div class="section-title">
+            <span aria-hidden="true">✏️</span>
+            <h2 id="formTitle">Formulaire</h2>
+          </div>
+
+          <form id="invoiceForm">
+            <fieldset>
+              <legend>Profil entrepreneur</legend>
+              <label>
+                Profil
+                <select id="profileSelect"></select>
+              </label>
+
+              <div class="profile-grid">
+                <label>
+                  Libellé
+                  <input id="profileLabel" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  Nom complet
+                  <input id="profileName" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  Nom commercial
+                  <input id="profileTradeName" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  Domaine
+                  <input id="profileDomain" type="text" autocomplete="off" />
+                </label>
+                <label class="wide">
+                  Adresse
+                  <textarea id="profileAddress" rows="2"></textarea>
+                </label>
+                <label>
+                  SIRET
+                  <input id="profileSiret" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  N° TVA
+                  <input id="profileVat" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  RCS
+                  <input id="profileRcs" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  RM
+                  <input id="profileRm" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  IBAN
+                  <input id="profileIban" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  BIC
+                  <input id="profileBic" type="text" autocomplete="off" />
+                </label>
+              </div>
+
+              <button class="button secondary" type="button" id="saveProfileButton">Enregistrer le profil</button>
+            </fieldset>
+
+            <fieldset>
+              <legend>Dates</legend>
+              <div class="field-row compact">
+                <label>
+                  Type de document
+                  <select id="documentType">
+                    <option value="facture">Facture</option>
+                    <option value="devis">Devis</option>
+                  </select>
+                </label>
+                <label>
+                  Date d'émission
+                  <input id="issueDate" type="date" required />
+                </label>
+                <label>
+                  Délai de paiement
+                  <input id="paymentDelay" type="number" min="0" value="8" required />
+                </label>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Client</legend>
+              <label>
+                Recherche
+                <input id="clientSearch" type="search" placeholder="Nom, adresse, SIREN..." autocomplete="off" />
+              </label>
+
+              <div class="client-select-row">
+                <label>
+                  Client sauvegardé
+                  <select id="clientSelect"></select>
+                </label>
+                <button class="icon-button danger" type="button" id="deleteClientButton" title="Supprimer le client sélectionné" aria-label="Supprimer le client sélectionné">×</button>
+              </div>
+
+              <div class="client-card" id="selectedClientDetails"></div>
+
+              <div class="new-client">
+                <h3>Ajouter nouveau client</h3>
+                <label>
+                  Nom
+                  <input id="newClientName" type="text" autocomplete="off" />
+                </label>
+                <label>
+                  Adresse
+                  <textarea id="newClientAddress" rows="2"></textarea>
+                </label>
+                <div class="field-row">
+                  <label>
+                    SIREN
+                    <input id="newClientSiren" type="text" autocomplete="off" />
+                  </label>
+                  <label>
+                    N° TVA
+                    <input id="newClientVat" type="text" autocomplete="off" />
+                  </label>
+                </div>
+                <button class="button secondary" type="button" id="addClientButton">Ajouter client</button>
+              </div>
+            </fieldset>
+
+            <fieldset>
+              <legend>Prestation</legend>
+              <label>
+                Description prestation
+                <textarea id="serviceDescription" rows="3" placeholder="Shooting photo, montage vidéo, prise vidéo..."></textarea>
+              </label>
+              <div class="field-row compact">
+                <label>
+                  Quantité
+                  <input id="quantity" type="number" min="1" step="1" value="1" />
+                </label>
+                <label>
+                  Prix unitaire
+                  <input id="unitPrice" type="number" min="0" step="0.01" value="250.00" />
+                </label>
+                <label>
+                  TVA
+                  <select id="vatRate">
+                    <option value="0">0%</option>
+                    <option value="5.5">5.5%</option>
+                    <option value="10">10%</option>
+                    <option value="20">20%</option>
+                  </select>
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="actions">
+              <button class="button primary" type="submit">Générer PDF</button>
+              <button class="button ghost" type="button" id="resetButton">Réinitialiser</button>
+            </div>
+          </form>
+        </section>
+
+        <section class="panel preview-panel" aria-labelledby="previewTitle">
+          <div class="section-title">
+            <span aria-hidden="true">👁️</span>
+            <h2 id="previewTitle">Aperçu</h2>
+          </div>
+          <div class="preview-scroll">
+            <div id="invoicePreview" class="invoice-page"></div>
+          </div>
+        </section>
+      </main>
+
+      <section class="panel history-panel" aria-labelledby="historyTitle">
+        <div class="section-title">
+          <span aria-hidden="true">📋</span>
+          <h2 id="historyTitle">Historique</h2>
+        </div>
+        <div id="historyGrid" class="history-grid"></div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script src="script.js"></script>
+  </body>
+</html>

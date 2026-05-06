@@ -1,0 +1,73 @@
+{
+  "name": "facturette",
+  "version": "1.0.0",
+  "description": "Logiciel local de facturation pour auto-entrepreneur",
+  "main": "main.js",
+  "author": "Mohamed Soumah",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --win nsis --x64",
+    "dist": "electron-builder --win portable --x64",
+    "dist:win": "electron-builder --win portable --x64",
+    "dist:mac": "electron-builder --mac dmg zip --universal",
+    "make-shortcut": "powershell -ExecutionPolicy Bypass -File scripts/create-shortcut.ps1"
+  },
+  "devDependencies": {
+    "electron": "^30.5.1",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "fr.facturette.desktop",
+    "productName": "Facturette",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "script.js",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "Facturette.exe"
+    },
+    "portable": {
+      "artifactName": "Facturette.exe"
+    },
+    "mac": {
+      "category": "public.app-category.business",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "universal"
+          ]
+        },
+        {
+          "target": "zip",
+          "arch": [
+            "universal"
+          ]
+        }
+      ],
+      "identity": null,
+      "artifactName": "Facturette-Mac-${arch}.${ext}"
+    },
+    "dmg": {
+      "artifactName": "Facturette-Mac-${arch}.${ext}"
+    }
+  }
+}
