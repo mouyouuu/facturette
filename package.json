@@ -11,7 +11,7 @@
     "pack": "electron-builder --win nsis --x64",
     "dist": "electron-builder --win portable --x64",
     "dist:win": "electron-builder --win portable --x64",
-    "dist:mac": "electron-builder --mac dmg zip --universal",
+    "dist:mac": "electron-builder --mac dmg zip --universal --publish never",
     "make-shortcut": "powershell -ExecutionPolicy Bypass -File scripts/create-shortcut.ps1"
   },
   "devDependencies": {
