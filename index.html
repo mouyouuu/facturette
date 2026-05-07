@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="Facturette" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icons/icon-180.png" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Facturette</title>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div>
+          <p class="eyebrow">Facturette</p>
+          <h1 id="headerTitle">Document</h1>
+        </div>
+        <div class="status-pill">
+          <span id="nextNumber">N&deg;29</span>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="screen active" data-screen="document" aria-labelledby="documentTitle">
+          <form id="invoiceForm" class="stack">
+            <div class="field-row split">
+              <label>
+                <span>Type</span>
+                <select id="documentType">
+                  <option value="facture">Facture</option>
+                  <option value="devis">Devis</option>
+                </select>
+              </label>
+              <label>
+                <span>Profil</span>
+                <select id="profileSelect"></select>
+              </label>
+            </div>
+
+            <div class="field-row split">
+              <label>
+                <span>Date</span>
+                <input id="issueDate" type="date" />
+              </label>
+              <label>
+                <span>Delai paiement</span>
+                <input id="paymentDelay" type="number" min="0" step="1" inputmode="numeric" />
+              </label>
+            </div>
+
+            <label>
+              <span>Client</span>
+              <select id="clientSelect"></select>
+            </label>
+            <div id="clientSummary" class="summary-box"></div>
+
+            <label>
+              <span>Prestation</span>
+              <textarea id="serviceDescription" rows="3" placeholder="Shooting photo, montage video..."></textarea>
+            </label>
+
+            <div class="field-row thirds">
+              <label>
+                <span>Qte</span>
+                <input id="quantity" type="number" min="1" step="1" inputmode="numeric" />
+              </label>
+              <label>
+                <span>Prix</span>
+                <input id="unitPrice" type="number" min="0" step="0.01" inputmode="decimal" />
+              </label>
+              <label>
+                <span>TVA</span>
+                <select id="vatRate">
+                  <option value="0">0%</option>
+                  <option value="5.5">5.5%</option>
+                  <option value="10">10%</option>
+                  <option value="20">20%</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="totals-card">
+              <div>
+                <span>Total HT</span>
+                <strong id="totalHt">0,00 &euro;</strong>
+              </div>
+              <div>
+                <span>TVA</span>
+                <strong id="vatAmount">0,00 &euro;</strong>
+              </div>
+              <div>
+                <span>Total</span>
+                <strong id="totalTtc">0,00 &euro;</strong>
+              </div>
+            </div>
+
+            <div class="action-row">
+              <button class="primary" type="submit">Generer PDF</button>
+              <button class="ghost" id="resetButton" type="button">Reinitialiser</button>
+            </div>
+          </form>
+
+          <section class="preview-wrap" aria-labelledby="previewTitle">
+            <div class="section-title">
+              <h2 id="previewTitle">Apercu</h2>
+              <span id="monthPreview">MOIS</span>
+            </div>
+            <div class="preview-scroll">
+              <div id="invoicePreview"></div>
+            </div>
+          </section>
+        </section>
+
+        <section class="screen" data-screen="clients" aria-labelledby="clientsTitle">
+          <div class="section-title">
+            <h2 id="clientsTitle">Clients</h2>
+            <span id="clientCount">0</span>
+          </div>
+          <label>
+            <span>Recherche</span>
+            <input id="clientSearch" type="search" placeholder="Nom, SIREN..." />
+          </label>
+          <form id="clientForm" class="stack">
+            <label>
+              <span>Nom</span>
+              <input id="newClientName" type="text" autocomplete="organization" />
+            </label>
+            <label>
+              <span>Adresse</span>
+              <textarea id="newClientAddress" rows="2"></textarea>
+            </label>
+            <div class="field-row split">
+              <label>
+                <span>SIREN</span>
+                <input id="newClientSiren" type="text" />
+              </label>
+              <label>
+                <span>TVA</span>
+                <input id="newClientVat" type="text" />
+              </label>
+            </div>
+            <button class="primary" type="submit">Ajouter client</button>
+          </form>
+          <div id="clientList" class="list"></div>
+        </section>
+
+        <section class="screen" data-screen="history" aria-labelledby="historyTitle">
+          <div class="section-title">
+            <h2 id="historyTitle">Historique</h2>
+            <span>50 max</span>
+          </div>
+          <div id="historyList" class="list"></div>
+        </section>
+
+        <section class="screen" data-screen="settings" aria-labelledby="settingsTitle">
+          <div class="section-title">
+            <h2 id="settingsTitle">Reglages</h2>
+            <span>Profils</span>
+          </div>
+          <form id="profileForm" class="stack">
+            <label>
+              <span>Profil a modifier</span>
+              <select id="profileEditSelect"></select>
+            </label>
+            <div class="field-row split">
+              <label>
+                <span>Libelle</span>
+                <input id="profileLabel" type="text" />
+              </label>
+              <label>
+                <span>Domaine</span>
+                <input id="profileDomain" type="text" />
+              </label>
+            </div>
+            <label>
+              <span>Nom officiel</span>
+              <input id="profileName" type="text" />
+            </label>
+            <label>
+              <span>Nom commercial</span>
+              <input id="profileTradeName" type="text" />
+            </label>
+            <label>
+              <span>Adresse</span>
+              <textarea id="profileAddress" rows="2"></textarea>
+            </label>
+            <div class="field-row split">
+              <label>
+                <span>SIRET</span>
+                <input id="profileSiret" type="text" />
+              </label>
+              <label>
+                <span>TVA</span>
+                <input id="profileVat" type="text" />
+              </label>
+            </div>
+            <div class="field-row split">
+              <label>
+                <span>RCS</span>
+                <input id="profileRcs" type="text" />
+              </label>
+              <label>
+                <span>RM</span>
+                <input id="profileRm" type="text" />
+              </label>
+            </div>
+            <label>
+              <span>IBAN</span>
+              <input id="profileIban" type="text" />
+            </label>
+            <label>
+              <span>BIC</span>
+              <input id="profileBic" type="text" />
+            </label>
+            <button class="primary" type="submit">Enregistrer profil</button>
+          </form>
+        </section>
+      </main>
+
+      <nav class="tabbar" aria-label="Navigation">
+        <button class="active" type="button" data-tab="document">Doc</button>
+        <button type="button" data-tab="clients">Clients</button>
+        <button type="button" data-tab="history">Historique</button>
+        <button type="button" data-tab="settings">Reglages</button>
+      </nav>
+    </div>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="printArea" aria-hidden="true"></div>
+    <script src="./app.js" defer></script>
+  </body>
+</html>
