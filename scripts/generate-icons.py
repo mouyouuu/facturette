@@ -13,11 +13,13 @@ OUT_DIR = ROOT / "build"
 PNG_PATH = OUT_DIR / "icon.png"
 ICO_PATH = OUT_DIR / "icon.ico"
 ICNS_PATH = OUT_DIR / "icon.icns"
+PWA_ICON_DIR = ROOT / "pwa" / "icons"
 
 ICO_SIZES = [(16, 16), (24, 24), (32, 32), (48, 48), (64, 64), (128, 128), (256, 256)]
 ICNS_SIZES = [(16, 16), (32, 32), (64, 64), (128, 128), (256, 256), (512, 512), (1024, 1024)]
 ALPHA_CROP_THRESHOLD = 8
 PADDING_RATIO = 0.12
+PWA_ICONS = [180, 192, 512]
 
 
 def make_square_icon(source: Path) -> Image.Image:
@@ -107,6 +109,14 @@ def save_windows_ico(image: Image.Image, path: Path) -> None:
     path.write_bytes(bytes(header + body))
 
 
+def save_pwa_icons(image: Image.Image) -> None:
+    PWA_ICON_DIR.mkdir(parents=True, exist_ok=True)
+
+    for size in PWA_ICONS:
+        resized = image.resize((size, size), Image.Resampling.LANCZOS)
+        resized.save(PWA_ICON_DIR / f"icon-{size}.png")
+
+
 def main() -> None:
     if not SOURCE.exists():
         raise FileNotFoundError(f"Source icon introuvable: {SOURCE}")
@@ -116,10 +126,12 @@ def main() -> None:
     icon.save(PNG_PATH)
     save_windows_ico(icon, ICO_PATH)
     icon.save(ICNS_PATH, sizes=ICNS_SIZES)
+    save_pwa_icons(icon)
 
     print(f"PNG : {PNG_PATH}")
     print(f"ICO : {ICO_PATH}")
     print(f"ICNS: {ICNS_PATH}")
+    print(f"PWA : {PWA_ICON_DIR}")
 
 
 if __name__ == "__main__":
